@@ -15,11 +15,28 @@ import { useSignIn } from "@clerk/clerk-expo";
 const Login = () => {
   const { signIn, setActive, isLoaded } = useSignIn();
 
-  const [emailAddress, setEmailAddress] = useState();
-  const [password, setPassword] = useState();
+  const [emailAddress, setEmailAddress] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const onSignInPress = () => {};
+  const onSignInPress = async () => {
+    if (!isLoaded) {
+      return;
+    }
+    setLoading(true);
+    try {
+      const completeSignIn = await signIn.create({
+        identifier: emailAddress, password
+      });
+
+      await setActive({ session: completeSignIn.createdSessionId });
+    } catch (error: any) {
+      alert(error.errors[0].message)
+      console.error(JSON.stringify(error, null, 2));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -30,12 +47,14 @@ const Login = () => {
         placeholder="johndoe@example.com"
         value={emailAddress}
         style={styles.inputField}
+        onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
       />
       <TextInput
         placeholder="password"
         value={password}
-        onChangeText={setPassword}
+        onChangeText={(password) => setPassword(password)}
         style={styles.inputField}
+        secureTextEntry
       />
 
       <TouchableOpacity

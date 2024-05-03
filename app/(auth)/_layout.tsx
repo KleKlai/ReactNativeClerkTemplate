@@ -38,6 +38,7 @@ const AuthLayout = () => {
           ),
           tabBarLabel: "Home",
         }}
+        redirect={!isSignedIn} // Just in case you use this on expo web
       />
       <Tabs.Screen
         name="profile"
@@ -49,6 +50,7 @@ const AuthLayout = () => {
           tabBarLabel: "My Profile",
           headerRight: () => <LogoutButton />,
         }}
+        redirect={!isSignedIn} // Just in case you use this on expo web
       />
     </Tabs>
   );
