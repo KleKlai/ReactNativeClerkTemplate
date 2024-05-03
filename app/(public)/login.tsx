@@ -18,6 +18,7 @@ const Login = () => {
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('')
 
   const onSignInPress = async () => {
     if (!isLoaded) {
@@ -31,7 +32,7 @@ const Login = () => {
 
       await setActive({ session: completeSignIn.createdSessionId });
     } catch (error: any) {
-      alert(error.errors[0].message)
+      setError(error.errors[0].longMessage)
       console.error(JSON.stringify(error, null, 2));
     } finally {
       setLoading(false);
@@ -56,6 +57,8 @@ const Login = () => {
         style={styles.inputField}
         secureTextEntry
       />
+
+      {error && <Text>{error}</Text>}
 
       <TouchableOpacity
         onPress={onSignInPress}

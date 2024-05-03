@@ -1,21 +1,20 @@
-import { View, StyleSheet, TextInput, Button } from 'react-native';
-import React, { useState } from 'react';
-import { Stack } from 'expo-router';
-import { useSignIn } from '@clerk/clerk-expo';
+import { View, StyleSheet, TextInput, Button } from "react-native";
+import React, { useState } from "react";
+import { Stack } from "expo-router";
+import { useSignIn } from "@clerk/clerk-expo";
 
 const Reset = () => {
-  const [emailAddress, setEmailAddress] = useState('');
-  const [password, setPassword] = useState('');
-  const [code, setCode] = useState('');
+  const [emailAddress, setEmailAddress] = useState("");
+  const [password, setPassword] = useState("");
+  const [code, setCode] = useState("");
   const [successfulCreation, setSuccessfulCreation] = useState(false);
   const { signIn, setActive } = useSignIn();
 
   // Request a passowrd reset code by email
   const onRequestReset = async () => {
     try {
-
       await signIn?.create({
-        strategy: 'reset_password_email_code',
+        strategy: "reset_password_email_code",
         identifier: emailAddress,
       });
       setSuccessfulCreation(true);
@@ -28,17 +27,16 @@ const Reset = () => {
   const onReset = async () => {
     try {
       const result = await signIn?.attemptFirstFactor({
-        strategy: 'reset_password_email_code',
+        strategy: "reset_password_email_code",
         code,
-        password
+        password,
       });
 
       console.log(result);
-      alert('Password reset successfully');
+      alert("Password reset successfully");
 
       // Set the user session active, which will log in the user automatically
-      await setActive({ session: result?.createdSessionId })
-
+      await setActive({ session: result?.createdSessionId });
     } catch (err: any) {
       alert(err.errors[0].message);
     }
@@ -50,19 +48,44 @@ const Reset = () => {
 
       {!successfulCreation && (
         <>
-          <TextInput autoCapitalize="none" placeholder="simon@galaxies.dev" value={emailAddress} onChangeText={setEmailAddress} style={styles.inputField} />
+          <TextInput
+            autoCapitalize="none"
+            placeholder="simon@galaxies.dev"
+            value={emailAddress}
+            onChangeText={setEmailAddress}
+            style={styles.inputField}
+          />
 
-          <Button onPress={onRequestReset} title="Send Reset Email" color={'#6c47ff'}></Button>
+          <Button
+            onPress={onRequestReset}
+            title="Send Reset Email"
+            color={"#6c47ff"}
+          ></Button>
         </>
       )}
 
       {successfulCreation && (
         <>
           <View>
-            <TextInput value={code} placeholder="Code..." style={styles.inputField} onChangeText={setCode} />
-            <TextInput placeholder="New password" value={password} onChangeText={setPassword} secureTextEntry style={styles.inputField} />
+            <TextInput
+              value={code}
+              placeholder="Code..."
+              style={styles.inputField}
+              onChangeText={setCode}
+            />
+            <TextInput
+              placeholder="New password"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              style={styles.inputField}
+            />
           </View>
-          <Button onPress={onReset} title="Set new Password" color={'#6c47ff'}></Button>
+          <Button
+            onPress={onReset}
+            title="Set new Password"
+            color={"#6c47ff"}
+          ></Button>
         </>
       )}
     </View>
@@ -72,21 +95,21 @@ const Reset = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     padding: 20,
   },
   inputField: {
     marginVertical: 4,
     height: 50,
     borderWidth: 1,
-    borderColor: '#6c47ff',
+    borderColor: "#6c47ff",
     borderRadius: 4,
     padding: 10,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   button: {
     margin: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
 });
 
